@@ -18,4 +18,7 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^news/', include('news.urls')),
+    url(r'^trades/', include('rates.urls')),
+    url(r'^theme/', include('theme.urls')),
 ]

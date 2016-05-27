@@ -12,6 +12,14 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import djcelery
+
+djcelery.setup_loader()
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# CELERY
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+BROKER_URL = 'redis://localhost:6379/0'
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -37,6 +45,14 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'news',
+    'newspaper',
+    'trades',
+    'rates',
+    'theme',
+    'djcelery',
+    'mockups',
+    'autofixture',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -55,7 +71,7 @@ ROOT_URLCONF = 'newspaper.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'newspaper', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -82,6 +98,22 @@ DATABASES = {
 }
 
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# CACHE
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+CACHES = {
+    'default': {
+        'BACKEND': 'redis_cache.cache.RedisCache',
+        'LOCATION': 'localhost:6379:0',
+        'OPTIONS': {
+            'PARSER_CLASS': 'redis.connection.HiredisParser',
+            'CLIENT_CLASS': 'redis_cache.client.DefaultClient',
+        }
+    },
+}
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
@@ -100,3 +132,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'newspaper', 'statics')]
+
+
